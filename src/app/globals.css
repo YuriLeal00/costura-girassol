@@ -1,26 +1,256 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+  Costura Girassol: sistema visual
+  Familia de paleta: Forest (verde profundo + off-white frio + um acento girassol).
+  Raios: cartoes 14px, campos 10px, botoes em pilula. Sem excecoes.
+  Motivo grafico: pesponto (linha tracejada de costura) e etiqueta de tecido.
+*/
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+:root {
+  --papel: #f1f3ee;
+  --superficie: #e6eae2;
+  --superficie-forte: #d9dfd4;
+  --tinta: #13241b;
+  --tinta-suave: #47594e;
+  --floresta: #1d4a36;
+  --floresta-hover: #153a2a;
+  --sobre-floresta: #f1f3ee;
+  --girassol: #e8a317;
+  --sobre-girassol: #13241b;
+  --linha: #bfc8bb;
+  --erro: #a8231b;
+  --ok: #1d6b45;
+  --sombra: 0 1px 2px rgb(19 36 27 / 0.06), 0 8px 24px -12px rgb(19 36 27 / 0.18);
+  --rodape: #1d4a36;
+  --sobre-rodape: #eef2ec;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --papel: #0f1813;
+    --superficie: #17231c;
+    --superficie-forte: #213128;
+    --tinta: #e9eee6;
+    --tinta-suave: #a6b4aa;
+    --floresta: #8cc7a4;
+    --floresta-hover: #a5d6b8;
+    --sobre-floresta: #0f1813;
+    --girassol: #f0b43a;
+    --sobre-girassol: #13241b;
+    --linha: #33453a;
+    --erro: #f08a80;
+    --ok: #7fd0a4;
+    --sombra: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 24px -12px rgb(0 0 0 / 0.5);
+    --rodape: #173a2b;
+    --sobre-rodape: #e9eee6;
   }
 }
 
+@theme inline {
+  --color-papel: var(--papel);
+  --color-superficie: var(--superficie);
+  --color-superficie-forte: var(--superficie-forte);
+  --color-tinta: var(--tinta);
+  --color-tinta-suave: var(--tinta-suave);
+  --color-floresta: var(--floresta);
+  --color-floresta-hover: var(--floresta-hover);
+  --color-sobre-floresta: var(--sobre-floresta);
+  --color-girassol: var(--girassol);
+  --color-sobre-girassol: var(--sobre-girassol);
+  --color-linha: var(--linha);
+  --color-erro: var(--erro);
+  --color-rodape: var(--rodape);
+  --color-sobre-rodape: var(--sobre-rodape);
+  --color-ok: var(--ok);
+  --font-sans: var(--fonte-texto);
+  --font-display: var(--fonte-titulo);
+  --radius-cartao: 14px;
+  --radius-campo: 10px;
+  --shadow-cartao: var(--sombra);
+}
+
+html {
+  color-scheme: light dark;
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: var(--fonte-texto), system-ui, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--fonte-titulo), system-ui, sans-serif;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+:focus-visible {
+  outline: 3px solid var(--girassol);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+::selection {
+  background: var(--girassol);
+  color: var(--sobre-girassol);
+}
+
+/* Pesponto: borda tracejada como costura reta */
+.pesponto {
+  background-image: repeating-linear-gradient(90deg, currentColor 0 8px, transparent 8px 14px);
+  background-size: 100% 1.5px;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 2px;
+  opacity: 0.35;
+}
+
+/* Remendo costurado: costura interna ao redor de um bloco */
+.remendo {
+  position: relative;
+}
+.remendo::after {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1.5px dashed currentColor;
+  border-radius: calc(var(--radius-cartao) - 6px);
+  opacity: 0.28;
+  pointer-events: none;
+}
+
+/* Etiqueta de tecido: furo + costura */
+.etiqueta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.2rem 0.7rem 0.2rem 0.55rem;
+  border-radius: 4px 999px 999px 4px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.5;
+  white-space: nowrap;
+  outline: 1px dashed color-mix(in oklab, currentColor 45%, transparent);
+  outline-offset: -4px;
+}
+.etiqueta::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--papel);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, currentColor 40%, transparent);
+}
+
+/* Botoes */
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: 48px;
+  padding: 0 1.4rem;
+  border-radius: 999px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition:
+    transform 160ms cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+}
+.botao:active {
+  transform: translateY(1px) scale(0.985);
+}
+.botao:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.botao-principal {
+  background: var(--floresta);
+  color: var(--sobre-floresta);
+}
+.botao-principal:hover {
+  background: var(--floresta-hover);
+}
+.botao-destaque {
+  background: var(--girassol);
+  color: var(--sobre-girassol);
+  box-shadow: inset 0 -2px 0 rgb(0 0 0 / 0.12);
+}
+.botao-destaque:hover {
+  background: color-mix(in oklab, var(--girassol) 88%, black);
+}
+.botao-contorno {
+  border: 1.5px solid var(--linha);
+  color: var(--tinta);
+}
+.botao-contorno:hover {
+  border-color: var(--tinta-suave);
+  background: var(--superficie);
+}
+
+/* Campos */
+.campo {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.65rem 0.9rem;
+  border-radius: var(--radius-campo);
+  border: 1.5px solid var(--linha);
+  background: color-mix(in oklab, var(--papel) 60%, white);
+  color: var(--tinta);
+}
+@media (prefers-color-scheme: dark) {
+  .campo {
+    background: var(--superficie);
+  }
+}
+.campo:focus {
+  outline: none;
+  border-color: var(--floresta);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--girassol) 55%, transparent);
+}
+.campo[aria-invalid="true"] {
+  border-color: var(--erro);
+}
+.rotulo {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+.ajuda {
+  font-size: 0.9rem;
+  color: var(--tinta-suave);
+  margin-top: 0.3rem;
+}
+.erro-campo {
+  font-size: 0.9rem;
+  color: var(--erro);
+  margin-top: 0.3rem;
+  font-weight: 700;
+}
+
+/* Entrada suave de blocos (so quando a pessoa aceita movimento) */
+@media (prefers-reduced-motion: no-preference) {
+  .surgir {
+    animation: surgir 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(var(--i, 0) * 70ms);
+  }
+  @keyframes surgir {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
 }
